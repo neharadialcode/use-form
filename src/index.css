@@ -1,0 +1,28 @@
+.form_input input {
+  border: 1px solid blue;
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+.form_input button {
+  background-color: blue;
+  color: white;
+  border: 0;
+  font-weight: 700;
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+.layout_fixed {
+  table-layout: fixed;
+}
+.input {
+  border: 1px solid blue;
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin-bottom: 20px;
+}
