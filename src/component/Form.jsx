@@ -10,20 +10,27 @@ const Form = () => {
   const [inputValue, setValue] = useState(initialState);
   const [updateValue, setUpdatedValue] = useState(false);
   const [updateValue2, setUpdatedValue2] = useState(null);
+  const [updateIndex, setUpdateIndex] = useState(null);
+
   const submitHandler = () => {
     if (
       inputValue.name !== "" &&
       inputValue.email !== "" &&
       inputValue.password !== ""
     ) {
-      if (updateValue2) {
-        const indexValue = arr.indexOf(updateValue2);
-        setArr((prevState) => [
-          ...prevState,
-          arr.splice(indexValue, 1, inputValue),
-        ]);
-        console.log(updateValue2, "updateValue2");
-      } else {
+      // THIS CODE RUN WHILE ONLY IN UPDATE
+      if (updateValue) {
+        arr.splice(updateIndex, 1, inputValue);
+        // console.log("inif");
+        // console.log(arr, "arr");
+        // console.log(arr.splice(updateIndex, 1, inputValue));
+        // setArr((prevState) => [
+        //   ...prevState,
+        //   arr.splice(updateIndex, 1, inputValue),
+        // ]);
+      } else if (!updateValue) {
+        console.log("on else  ");
+
         setArr((prevState) => [...prevState, inputValue]);
       }
       setValue(initialState);
@@ -31,24 +38,16 @@ const Form = () => {
   };
   const deleteHandler = (index) => {
     const duplicateArray = [...arr];
-    const newArray = duplicateArray.filter((value, i) => i !== index);
+    const newArray = duplicateArray.filter((i) => i !== index);
     setArr(newArray);
   };
-  const updateData = (obj, i) => {
+
+  const updateData = (obj, index) => {
     setUpdatedValue(true);
     setValue(obj);
-    setUpdatedValue2(obj);
+    setUpdateIndex(index);
   };
-  // const updateArr = () => {
-  //   const indexValue = arr.indexOf(updateValue2);
-  //   setArr((prevState) => [
-  //     ...prevState,
-  //     arr.splice(indexValue, 1, inputValue),
-  //   ]);
-  //   console.log(updateValue2, "updateValue2");
-  //   setUpdatedValue(false);
-  //   setValue(initialState);
-  // };
+
   const logoutHamdler = () => {
     localStorage.removeItem("neha", false);
     window.location.reload();
