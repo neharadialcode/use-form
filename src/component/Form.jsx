@@ -62,17 +62,8 @@ const Form = () => {
     window.location.reload();
   };
 
-  function handleSearch(value) {
-    setSearchValue(value);
-    const filtereddata =
-      arr &&
-      arr.filter((obj) => {
-        if (obj.name.includes(value)) {
-          return [...arr, obj];
-        }
-      });
-    console.log(filtereddata, "filtereddata");
-    setArr(filtereddata);
+  function handleSearch(e) {
+    setSearchValue(e.target.value);
   }
 
   return (
@@ -136,7 +127,7 @@ const Form = () => {
       <div className="my-5 row mx-0">
         <div className="col-4 px-5">
           <input
-            onChange={(e) => handleSearch(e.target.value)}
+            onChange={(e) => handleSearch(e)}
             className="w-100"
             type="text"
             name=""
@@ -158,38 +149,83 @@ const Form = () => {
             </tr>
           </thead>
           <tbody>
-            {arr.map((obj, index) => (
-              <tr key={index}>
-                <td className="bg-success text-white fw-bold border">
-                  {index + 1}
-                </td>
-                <td className="bg-dark text-white fw-bold border">
-                  {obj.name}
-                </td>
-                <td className="bg-success text-white fw-bold border">
-                  {obj.email}
-                </td>
-                <td className="bg-dark text-white fw-bold border">
-                  {obj.password}
-                </td>
-                <td className=" text-white fw-bold">
-                  <button
-                    onClick={() => deleteHandler(index)}
-                    className="btn btn-danger fw-bold"
-                  >
-                    DELETE
-                  </button>
-                  <button
-                    onClick={() => {
-                      updateData(obj, index);
-                    }}
-                    className="btn btn-warning fw-bold ms-3"
-                  >
-                    UPDATE
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {searchValue ? (
+              <>
+                {arr
+                  .filter((obj) => {
+                    if (obj.name.includes(searchValue)) {
+                      return true;
+                    }
+                  })
+                  .map((obj, index) => (
+                    <tr key={index}>
+                      <td className="bg-success text-white fw-bold border">
+                        {index + 1}
+                      </td>
+                      <td className="bg-dark text-white fw-bold border">
+                        {obj.name}
+                      </td>
+                      <td className="bg-success text-white fw-bold border">
+                        {obj.email}
+                      </td>
+                      <td className="bg-dark text-white fw-bold border">
+                        {obj.password}
+                      </td>
+                      <td className=" text-white fw-bold">
+                        <button
+                          onClick={() => deleteHandler(index)}
+                          className="btn btn-danger fw-bold"
+                        >
+                          DELETE
+                        </button>
+                        <button
+                          onClick={() => {
+                            updateData(obj, index);
+                          }}
+                          className="btn btn-warning fw-bold ms-3"
+                        >
+                          UPDATE
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+              </>
+            ) : (
+              <>
+                {arr.map((obj, index) => (
+                  <tr key={index}>
+                    <td className="bg-success text-white fw-bold border">
+                      {index + 1}
+                    </td>
+                    <td className="bg-dark text-white fw-bold border">
+                      {obj.name}
+                    </td>
+                    <td className="bg-success text-white fw-bold border">
+                      {obj.email}
+                    </td>
+                    <td className="bg-dark text-white fw-bold border">
+                      {obj.password}
+                    </td>
+                    <td className=" text-white fw-bold">
+                      <button
+                        onClick={() => deleteHandler(index)}
+                        className="btn btn-danger fw-bold"
+                      >
+                        DELETE
+                      </button>
+                      <button
+                        onClick={() => {
+                          updateData(obj, index);
+                        }}
+                        className="btn btn-warning fw-bold ms-3"
+                      >
+                        UPDATE
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </>
+            )}
           </tbody>
         </table>
       )}
