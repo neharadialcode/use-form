@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const Form = () => {
   const initialState = {
@@ -6,11 +6,28 @@ const Form = () => {
     email: "",
     password: "",
   };
-  const [arr, setArr] = useState([]);
+  const initialArr = [
+    {
+      name: "text 1",
+      email: "x@gmail.com",
+      password: "1223",
+    },
+    {
+      name: "new",
+      email: "y@gmail.com",
+      password: "1223",
+    },
+    {
+      name: "dummy",
+      email: "z@gmail.com",
+      password: "1223",
+    },
+  ];
+  const [arr, setArr] = useState(initialArr);
   const [inputValue, setValue] = useState(initialState);
   const [updateValue, setUpdatedValue] = useState(false);
-  const [updateValue2, setUpdatedValue2] = useState(null);
   const [updateIndex, setUpdateIndex] = useState(null);
+  const [searchValue, setSearchValue] = useState("");
 
   const submitHandler = () => {
     if (
@@ -20,17 +37,9 @@ const Form = () => {
     ) {
       // THIS CODE RUN WHILE ONLY IN UPDATE
       if (updateValue) {
-        arr.splice(updateIndex, 1, inputValue);
-        // console.log("inif");
-        // console.log(arr, "arr");
-        // console.log(arr.splice(updateIndex, 1, inputValue));
-        // setArr((prevState) => [
-        //   ...prevState,
-        //   arr.splice(updateIndex, 1, inputValue),
-        // ]);
+        arr && arr.splice(updateIndex, 1, inputValue);
       } else if (!updateValue) {
         console.log("on else  ");
-
         setArr((prevState) => [...prevState, inputValue]);
       }
       setValue(initialState);
@@ -38,7 +47,7 @@ const Form = () => {
   };
   const deleteHandler = (index) => {
     const duplicateArray = [...arr];
-    const newArray = duplicateArray.filter((i) => i !== index);
+    const newArray = duplicateArray.filter((val, i) => i !== index);
     setArr(newArray);
   };
 
@@ -52,6 +61,26 @@ const Form = () => {
     localStorage.removeItem("neha", false);
     window.location.reload();
   };
+
+  function handleSearch(value) {
+    setSearchValue(value);
+    const filtereddata =
+      arr &&
+      arr.filter((obj) => {
+        if (obj.name.includes(value)) {
+          return [...arr, obj];
+        }
+      });
+    console.log(filtereddata, "filtereddata");
+    setArr(filtereddata);
+  }
+  // useEffect(() => {
+  //   const searchArr = arr.filter((val) => inputValue.name.includes(val));
+
+  //   if (searchArr) {
+  //     setValue(arr.length > 0 && arr.filter((val) => val.name.includes("x")));
+  //   }
+  // }, [searchValue]);
   return (
     <div className="position-relative">
       <button
@@ -110,6 +139,20 @@ const Form = () => {
           </div>
         </div>
       </div>
+      <div className="my-5 row mx-0">
+        <div className="col-4 px-5">
+          <input
+            onChange={(e) => handleSearch(e.target.value)}
+            className="w-100"
+            type="text"
+            name=""
+            value={searchValue}
+            placeholder="Search"
+            id=""
+          />
+        </div>
+      </div>
+
       {arr.length > 0 && (
         <table className="w-100 layout_fixed mt-5">
           <thead>
