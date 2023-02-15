@@ -74,13 +74,7 @@ const Form = () => {
     console.log(filtereddata, "filtereddata");
     setArr(filtereddata);
   }
-  // useEffect(() => {
-  //   const searchArr = arr.filter((val) => inputValue.name.includes(val));
 
-  //   if (searchArr) {
-  //     setValue(arr.length > 0 && arr.filter((val) => val.name.includes("x")));
-  //   }
-  // }, [searchValue]);
   return (
     <div className="position-relative">
       <button

@@ -1,7 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-
+const initialArr = [
+  {
+    name: "text 1",
+    email: "x@gmail.com",
+    password: "1223",
+  },
+  {
+    name: "new",
+    email: "y@gmail.com",
+    password: "1223",
+  },
+  {
+    name: "dummy",
+    email: "z@gmail.com",
+    password: "1223",
+  },
+];
 const FormCheck = () => {
+  const [arr, setArr] = useState(initialArr);
+  const [updateValue, setUpdatedValue] = useState(null);
+  // const [updateIndex, setUpdateIndex] = useState(null);
+  const [searchVal, setSearchVal] = useState(null);
+
   const {
     register,
     handleSubmit,
@@ -10,21 +31,46 @@ const FormCheck = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      cpassword: "",
+      name: updateValue ? updateValue.name : "",
+      email: updateValue ? updateValue.email : "",
+      password: updateValue ? updateValue.password : "",
+      cpassword: updateValue ? updateValue.cpassword : "",
     },
     mode: "onTouched",
   });
 
+  // FOR ADD VALUES IN ARRAY AND MAKE THE INPUT BLANK
   const onSubmit = (data) => {
     console.log(data);
-    reset();
+    const emailExist = arr.filter((val) => val.email === data.email);
+    console.log(emailExist, "emailExist");
+    if (emailExist.length === 0) {
+      setArr((prevState) => [...prevState, data]);
+      reset();
+    }
   };
+  // FOR DELETE ANY OBJECT FORM ARRAY
+  const deleteHandler = (index) => {
+    const duplicateArray = [...arr];
+    const newArray = duplicateArray.filter((val, i) => i !== index);
+    setArr(newArray);
+  };
+  // FOR SEARCH ANY VALUE FORM ARRAY
+  const searchHandler = (e) => {
+    setSearchVal(e.target.value);
+  };
+
+  // FOR UPDATE THE VALUE IN ARRAY
+
+  const updateData = (obj, index) => {
+    setUpdatedValue(obj);
+    // setUpdateIndex(index);
+    console.log(obj, "obj");
+  };
+
   return (
     <div>
-      <div className="row justify-content-center vh-100 align-items-center mx-0">
+      <div className="row justify-content-center  mx-0">
         <div className="col-6">
           <form className="form_input" onSubmit={handleSubmit(onSubmit)}>
             {/* NAME INPUT VALUE */}
@@ -98,13 +144,112 @@ const FormCheck = () => {
                   },
                 })}
               ></input>
-
               <p className="alerts">{errors.cpassword?.message}</p>
             </div>
             <input className="bg-success text-white fw-bold" type="submit" />
           </form>
         </div>
       </div>
+      {/* TABLR ARRAY LIST */}
+
+      <input
+        className="mt-5"
+        type="text"
+        placeholder="Search"
+        onChange={(e) => searchHandler(e)}
+      />
+
+      {arr.length > 0 && (
+        <table className="w-100 layout_fixed my-5">
+          <thead>
+            <tr>
+              <th>SR NO.</th>
+              <th>NAME</th>
+              <th>EMAIL</th>
+              <th>PASSWORD</th>
+            </tr>
+          </thead>
+          <tbody>
+            {searchVal ? (
+              <>
+                {arr
+                  .filter((obj) => {
+                    if (obj.name.includes(searchVal)) {
+                      return true;
+                    }
+                  })
+                  .map((obj, index) => (
+                    <tr key={index}>
+                      <td className="bg-success text-white fw-bold border">
+                        {index + 1}
+                      </td>
+                      <td className="bg-dark text-white fw-bold border">
+                        {obj.name}
+                      </td>
+                      <td className="bg-success text-white fw-bold border">
+                        {obj.email}
+                      </td>
+                      <td className="bg-dark text-white fw-bold border">
+                        {obj.password}
+                      </td>
+                      <td className=" text-white fw-bold">
+                        <button
+                          onClick={() => deleteHandler(index)}
+                          className="btn btn-danger fw-bold"
+                        >
+                          DELETE
+                        </button>
+                        <button
+                          onClick={() => {
+                            updateData(obj, index);
+                          }}
+                          className="btn btn-warning fw-bold ms-3"
+                        >
+                          UPDATE
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+              </>
+            ) : (
+              <>
+                {arr.map((obj, index) => (
+                  <tr key={index}>
+                    <td className="bg-success text-white fw-bold border">
+                      {index + 1}
+                    </td>
+                    <td className="bg-dark text-white fw-bold border">
+                      {obj.name}
+                    </td>
+                    <td className="bg-success text-white fw-bold border">
+                      {obj.email}
+                    </td>
+                    <td className="bg-dark text-white fw-bold border">
+                      {obj.password}
+                    </td>
+                    <td className=" text-white fw-bold">
+                      <button
+                        onClick={() => deleteHandler(index)}
+                        className="btn btn-danger fw-bold"
+                      >
+                        DELETE
+                      </button>
+                      <button
+                        onClick={() => {
+                          updateData(obj, index);
+                        }}
+                        className="btn btn-warning fw-bold ms-3"
+                      >
+                        UPDATE
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </>
+            )}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };
