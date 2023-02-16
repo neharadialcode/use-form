@@ -19,9 +19,10 @@ const initialArr = [
 ];
 const FormCheck = () => {
   const [arr, setArr] = useState(initialArr);
-  const [updateValue, setUpdatedValue] = useState(null);
-  // const [updateIndex, setUpdateIndex] = useState(null);
+  const [updateValue, setUpdatedValue] = useState({});
+  const [updateIndex, setUpdateIndex] = useState(null);
   const [searchVal, setSearchVal] = useState(null);
+  const [ifValue, setIfValue] = useState(false);
 
   const {
     register,
@@ -30,24 +31,22 @@ const FormCheck = () => {
     watch,
     formState: { errors },
   } = useForm({
-    defaultValues: {
-      name: updateValue ? updateValue.name : "",
-      email: updateValue ? updateValue.email : "",
-      password: updateValue ? updateValue.password : "",
-      cpassword: updateValue ? updateValue.cpassword : "",
-    },
-    mode: "onTouched",
+    defaultValues: updateValue,
   });
 
   // FOR ADD VALUES IN ARRAY AND MAKE THE INPUT BLANK
   const onSubmit = (data) => {
     console.log(data);
-    const emailExist = arr.filter((val) => val.email === data.email);
-    console.log(emailExist, "emailExist");
-    if (emailExist.length === 0) {
-      setArr((prevState) => [...prevState, data]);
-      reset();
+    if (ifValue) {
+      arr[updateIndex].name = data.name;
+      arr && arr.splice(updateIndex, 1, data);
+    } else {
+      const emailExist = arr.filter((val) => val.email === data.email);
+      if (emailExist.length === 0) {
+        setArr((prevState) => [...prevState, data]);
+      }
     }
+    reset({ name: "", email: "", password: "", cpassword: "" });
   };
   // FOR DELETE ANY OBJECT FORM ARRAY
   const deleteHandler = (index) => {
@@ -64,9 +63,10 @@ const FormCheck = () => {
 
   const updateData = (obj, index) => {
     setUpdatedValue(obj);
-    // setUpdateIndex(index);
-    console.log(obj, "obj");
+    setUpdateIndex(index);
+    setIfValue(true);
   };
+  console.log(updateValue, "obj");
 
   return (
     <div>
@@ -76,6 +76,7 @@ const FormCheck = () => {
             {/* NAME INPUT VALUE */}
             <div>
               <input
+                defaultValue={updateValue.name}
                 name="name"
                 type="text"
                 placeholder="Name"
@@ -97,6 +98,7 @@ const FormCheck = () => {
                   },
                 })}
                 id="email"
+                defaultValue={updateValue.email}
                 placeholder="Email"
               />
 
@@ -109,6 +111,7 @@ const FormCheck = () => {
               <input
                 className="input-field"
                 size={"44"}
+                defaultValue={updateValue.password}
                 type="password"
                 placeholder="Password"
                 name="password"
@@ -130,9 +133,10 @@ const FormCheck = () => {
             {/* CONFIRM PASSWORD INPUT VALUE */}
             <div>
               <input
+                defaultValue={updateValue.cpassword}
                 className="input-field"
                 size={"44"}
-                type={"password"}
+                type="password"
                 placeholder="Confirm Password"
                 name="cpassword"
                 {...register("cpassword", {
