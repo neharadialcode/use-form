@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 const initialArr = [
   {
@@ -19,7 +19,14 @@ const initialArr = [
 ];
 const FormCheck = () => {
   const [arr, setArr] = useState(initialArr);
-  const [updateValue, setUpdatedValue] = useState({});
+  const [updateValueDef, setUpdatedValuedef] = useState({});
+
+  const [updateValue, setUpdatedValue] = useState({
+    name: updateValueDef.name,
+    email: updateValueDef.email,
+    password: updateValueDef.password,
+    cpassword: updateValueDef.cpassword,
+  });
   const [updateIndex, setUpdateIndex] = useState(null);
   const [searchVal, setSearchVal] = useState(null);
   const [ifValue, setIfValue] = useState(false);
@@ -34,9 +41,18 @@ const FormCheck = () => {
     defaultValues: updateValue,
   });
 
+  useEffect(() => {
+    setUpdatedValue({
+      name: updateValueDef.name,
+      email: updateValueDef.email,
+      password: updateValueDef.password,
+      cpassword: updateValueDef.cpassword,
+    });
+  }, [updateValueDef]);
+
   // FOR ADD VALUES IN ARRAY AND MAKE THE INPUT BLANK
   const onSubmit = (data) => {
-    console.log(data);
+    console.log(data, "QQQQQQQQQQ");
     if (ifValue) {
       arr[updateIndex].name = data.name;
       arr && arr.splice(updateIndex, 1, data);
@@ -62,7 +78,7 @@ const FormCheck = () => {
   // FOR UPDATE THE VALUE IN ARRAY
 
   const updateData = (obj, index) => {
-    setUpdatedValue(obj);
+    setUpdatedValuedef(obj);
     setUpdateIndex(index);
     setIfValue(true);
   };
